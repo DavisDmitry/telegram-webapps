@@ -1,0 +1,21 @@
+{
+  "name": "telegram-webapps",
+  "version": "0.0.1",
+  "license": "MIT",
+  "types": "src/index.d.ts",
+  "homepage": "https://github.com/DavisDmitry/telegram-webapps",
+  "repository": "https://github.com/DavisDmitry/telegram-webapps.git",
+  "scripts": {
+    "lint": "prettier --plugin-search-dir . --check . && eslint .",
+    "format": "prettier --plugin-search-dir . --check . --write ."
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "prettier": "^2.8.2",
+    "prettier-plugin-sort-imports": "^1.7.1",
+    "typescript": "^4.9.4"
+  }
+}
