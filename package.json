@@ -1,10 +1,17 @@
 {
   "name": "telegram-webapps",
   "version": "0.0.1",
-  "license": "MIT",
-  "types": "src/index.d.ts",
+  "description": "Types for Telegram Web Apps",
+  "keywords": ["telegram", "telegram-webapps", "types"],
   "homepage": "https://github.com/DavisDmitry/telegram-webapps",
-  "repository": "https://github.com/DavisDmitry/telegram-webapps.git",
+  "license": "MIT",
+  "author": "Dmitry Davis <dmitrydavis@protonmail.com>",
+  "files": ["src"],
+  "types": "src/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavisDmitry/telegram-webapps.git"
+  },
   "scripts": {
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
     "format": "prettier --plugin-search-dir . --check . --write ."
