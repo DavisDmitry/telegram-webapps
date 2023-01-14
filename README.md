@@ -41,7 +41,9 @@ Include the types file inside your [ `tsconfig.json` ](https://www.typescriptlan
 ```diff
 {
   "compilerOptions": {
-    "typeRoots": ["./node_modules/telegram-webapps"]
+    "typeRoots": [
++     "./node_modules/telegram-webapps"
+    ]
   }
 }
 ```
