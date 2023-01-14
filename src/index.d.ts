@@ -136,19 +136,87 @@ export declare namespace TelegramWebApps {
     disableClosingConfirmation(): void
     /**
      * A method that sets the app event handler.
+     *
+     * Event occurs whenever theme settings are changed in the user's Telegram app (including
+     * switching to night mode).
+     *
+     * *eventHandler* receives no parameters, new theme settings and color scheme can be
+     * received via *this.themeParams* and *this.colorScheme* respectively.
      */
-    onEvent(
-      eventType:
-        | 'themeChanged'
-        | 'mainButtonClicked'
-        | 'backButtonClicked'
-        | 'settingsButtonClicked',
-      eventHandler: () => void
-    ): void
+    onEvent(eventType: 'themeChanged', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * Event occurs when the visible section of the Web App is changed.
+     *
+     * *eventHandler* receives an object with the single field *isStateStable*. If
+     * *isStateStable* is true, the resizing of the Web App is finished. If it is false,
+     * the resizing is ongoing (the user is expanding or collapsing the Web App or an
+     * animated object is playing). The current value of the visible section’s height is
+     * available in *this.viewportHeight*.
+     */
     onEvent(eventType: 'viewportChanged', eventHandler: ViewportChangedEventHandler): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * Event occurs when the main button is pressed.
+     */
+    onEvent(eventType: 'mainButtonClicked', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 6.1+` Event occurrs when the back button is pressed.
+     */
+    onEvent(eventType: 'backButtonClicked', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 6.1+` Event occurrs when the Settings item in context menu is pressed.
+     */
+    onEvent(eventType: 'settingsButtonClicked', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 6.1+` Event occurrs when the opened invoice is closed.
+     *
+     * *eventHandler* receives an object with the two fields: *url* – invoice link
+     * provided and *status* – one of the invoice statuses:
+     * - **paid** – invoice was paid successfully,
+     * - **cancelled** – user closed this invoice without paying,
+     * - **failed** – user tried to pay, but the payment was failed,
+     * - **pending** – the payment is still processing. The bot will receive a service
+     * message about a successful payment when the payment is successfully paid.
+     */
     onEvent(eventType: 'invoiceClosed', eventHandler: InvoiceClosedEventHandler): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 6.2+` Event occurrs when the opened popup is closed.
+     *
+     * *eventHandler* receives an object with the single field *button_id* – the value of
+     * the field *id* of the pressed button. If no buttons were pressed, the field
+     * *button_id* will be *null*.
+     */
     onEvent(eventType: 'popupClosed', eventHandler: PopupClosedEventHandler): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 6.4+` Event occurs when the QR code scanner catches a code with text data.
+     *
+     * *eventHandler* receives an object with the single field *data* containing text data
+     * from the QR code.
+     */
     onEvent(eventType: 'qrTextReceived', eventHandler: QrTextReceivedEventHandler): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 6.4+` Event occurrs when the `readTextFromClipboard` method is called.
+     *
+     * *eventHandler* receives an object with the single field *data* containing text data
+     * from the clipboard. If the clipboard contains non-text data, the field *data* will
+     * be an empty string. If the Web App has no access to the clipboard, the field *data*
+     * will be *null*.
+     */
     onEvent(
       eventType: 'clipboardTextReceived',
       eventHandler: ClipboardTextReceivedEventHandler
@@ -164,13 +232,28 @@ export declare namespace TelegramWebApps {
         | 'settingsButtonClicked',
       eventHandler: () => void
     ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
     offEvent(
       eventType: 'viewportChanged',
       eventHandler: ViewportChangedEventHandler
     ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
     offEvent(eventType: 'invoiceClosed', eventHandler: InvoiceClosedEventHandler): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
     offEvent(eventType: 'popupClosed', eventHandler: PopupClosedEventHandler): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
     offEvent(eventType: 'qrTextReceived', eventHandler: QrTextReceivedEventHandler): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
     offEvent(
       eventType: 'clipboardTextReceived',
       eventHandler: ClipboardTextReceivedEventHandler
