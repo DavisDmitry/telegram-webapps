@@ -1,11 +1,12 @@
 {
   "name": "telegram-webapps",
   "version": "0.0.2",
-  "description": "Types for Telegram Web Apps",
+  "description": "Typings for Telegram Web Apps",
   "keywords": [
     "telegram",
     "telegram-webapps",
-    "types"
+    "types",
+    "typings"
   ],
   "homepage": "https://github.com/DavisDmitry/telegram-webapps",
   "license": "MIT",
