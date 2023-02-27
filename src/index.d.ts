@@ -35,7 +35,7 @@ export declare namespace TelegramWebApps {
      *
      * Also available as the CSS variable `var(--tg-color-scheme)`.
      */
-    readonly colorScheme: 'light' | 'dark'
+    readonly colorScheme: ColorScheme
     /**
      * 	An object containing the current theme settings used in the Telegram app.
      */
@@ -143,7 +143,10 @@ export declare namespace TelegramWebApps {
      * *eventHandler* receives no parameters, new theme settings and color scheme can be
      * received via *this.themeParams* and *this.colorScheme* respectively.
      */
-    onEvent(eventType: 'themeChanged', eventHandler: () => void): void
+    onEvent(
+      eventType: 'themeChanged',
+      eventHandler: (this: { themeParams: ThemeParams; colorScheme: ColorScheme }) => void
+    ): void
     /**
      * A method that sets the app event handler.
      *
@@ -752,7 +755,11 @@ export declare namespace TelegramWebApps {
     readonly photo_url?: string
   }
 
-  type ViewportChangedEventHandler = (params: { isStateStable: boolean }) => void
+  type ColorScheme = 'light' | 'dark'
+  type ViewportChangedEventHandler = (
+    this: { viewportHeight: number },
+    params: { isStateStable: boolean }
+  ) => void
   type InvoiceClosedEventHandler = (params: {
     url: string
     status: 'paid' | 'cancelled' | 'failed' | 'pending'
