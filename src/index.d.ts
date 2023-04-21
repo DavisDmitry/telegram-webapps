@@ -271,6 +271,18 @@ export declare namespace TelegramWebApps {
      */
     sendData(data: string): void
     /**
+     * `Bot API 6.7+` A method that inserts the bot's username and the specified inline
+     * *query* in the current chat's input field. Query may be empty, in which case only
+     * the bot's username will be inserted. If an optional *choose_chat_types* parameter
+     * was passed, the client prompts the user to choose a specific chat, then opens that
+     * chat and inserts the bot's username and the specified inline query in the input
+     * field. You can specify which types of chats the user will be able to choose from.
+     */
+    switchInlineQuery(
+      query: string,
+      choose_chat_types?: ('users' | 'bots' | 'groups' | 'channels')[]
+    ): void
+    /**
      * A method that opens a link in an external browser. The Web App will *not* be
      * closed.
      *
