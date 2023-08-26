@@ -2,7 +2,7 @@ export declare namespace TelegramWebApps {
   /**
    * To connect your Web App to the Telegram client, place the script telegram-web-app.js
    * in the `<head>` tag before any other scripts, using this code:
-   * ```
+   * ```html
    * <script src="https://telegram.org/js/telegram-web-app.js"></script>
    * ```
    * Once the script is connected, a `window.Telegram.WebApp` object will become available
@@ -625,7 +625,7 @@ export declare namespace TelegramWebApps {
      * - *rigid*, indicates a collision between hard or inflexible UI objects,
      * - *soft*, indicates a collision between soft or flexible UI objects.
      */
-    impactOccured(style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'): HapticFeedback
+    impactOccurred(style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'): HapticFeedback
     /**
      * `Bot API 6.1+` A method tells that a task or action has succeeded, failed, or
      * produced a warning. The Telegram app may play the appropriate haptics based on type
@@ -634,7 +634,7 @@ export declare namespace TelegramWebApps {
      * - *success*, indicates that a task or action has completed successfully,
      * - *warning*, indicates that a task or action produced a warning.
      */
-    notificationOccured(type: 'error' | 'success' | 'warning'): HapticFeedback
+    notificationOccurred(type: 'error' | 'success' | 'warning'): HapticFeedback
     /**
      * `Bot API 6.1+` A method tells that the user has changed a selection. The Telegram
      * app may play the appropriate haptics.
