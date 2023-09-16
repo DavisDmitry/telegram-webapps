@@ -147,15 +147,21 @@ export declare namespace TelegramWebApps {
      */
     readonly HapticFeedback: HapticFeedback
     /**
+     * An object for controlling cloud storage.
+     */
+    readonly CloudStorage: CloudStorage
+    /**
      * Returns true if the user's app supports a version of the Bot API that is equal to
      * or higher than the version passed as the parameter.
      */
     isVersionAtLeast(version: string): boolean
     /**
-     * `Bot API 6.1+` A method that sets the app header color. You can only pass
-     * *Telegram.WebApp.themeParams.bg_color* or
-     * *Telegram.WebApp.themeParams.secondary_bg_color* as a color or you can use keywords
-     * *bg_color*, *secondary_bg_color* instead.
+     * `Bot API 6.1+` A method that sets the app header color in the `#RRGGBB` format. You
+     * can also use keywords *bg_color* and *secondary_bg_color*.
+     *
+     * Up to `Bot API 6.9` You can only pass *Telegram.WebApp.themeParams.bg_color* or
+     * *Telegram.WebApp.themeParams.secondary_bg_color* as a color or *bg_color*,
+     * *secondary_bg_color* keywords.
      */
     setHeaderColor(color: string): void
     /**
@@ -262,6 +268,34 @@ export declare namespace TelegramWebApps {
     onEvent(
       eventType: 'clipboardTextReceived',
       eventHandler: ClipboardTextReceivedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 6.9+` Occurs when the write permission was requested.
+     *
+     * *eventHandler* receives an object with the single field *status* containing one of
+     * the statuses:
+     * - **allowed** – user granted write permission to the bot,
+     * - **cancelled** – user declined this request.
+     */
+    onEvent(
+      eventType: 'writeAccessRequested',
+      eventHandler: (status: 'allowed' | 'cancelled') => void
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 6.9+` Occurrs when the user's phone number was requested.
+     *
+     * *eventHandler* receives an object with the single field status containing one of
+     * the statuses:
+     * - **sent** – user shared their phone number with the bot,
+     * - **cancelled** – user declined this request.
+     */
+    onEvent(
+      eventType: 'contactRequested',
+      eventHandler: (status: 'sent' | 'cancelled') => void
     ): void
     /**
      * A method that deletes a previously set event handler.
@@ -391,6 +425,20 @@ export declare namespace TelegramWebApps {
      * click inside the Web App or on the main button).*
      */
     readTextFromClipboard(callback?: (text: string) => void): void
+    /**
+     * `Bot API 6.9+` A method that shows a native popup requesting permission for the bot
+     * to send messages to the user. If an optional *callback* parameter was passed, the
+     * *callback* function will be called when the popup is closed and the first argument
+     * will be a boolean indicating whether the user granted this access.
+     */
+    requestWriteAccess(callback?: (accessGranted: boolean) => void): void
+    /**
+     * `Bot API 6.9+` A method that shows a native popup prompting the user for their
+     * phone number. If an optional *callback* parameter was passed, the *callback*
+     * function will be called when the popup is closed and the first argument will be a
+     * boolean indicating whether the user shared its phone number.
+     */
+    requestContact(callback?: (phoneNumberShared: boolean) => void): void
     /**
      * A method that informs the Telegram app that the Web App is ready to be displayed.
      *
@@ -659,6 +707,85 @@ export declare namespace TelegramWebApps {
   }
 
   /**
+   * This object controls the cloud storage. Each bot can store up to 1024 items per user
+   * in the cloud storage.
+   */
+  interface CloudStorage {
+    /**
+     * `Bot API 6.9+` A method that stores a value in the cloud storage using the
+     * specified key. The key should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. The value should contain 0-4096 characters. You can store
+     * up to 1024 keys in the cloud storage. If an optional *callback* parameter was
+     * passed, the *callback* function will be called. In case of an error, the first
+     * argument will contain the error. In case of success, the first argument will be
+     * *null* and the second argument will be a boolean indicating whether the value was
+     * stored.
+     */
+    setItem(
+      key: string,
+      value: string,
+      callback?: ((error: Error) => void) | ((error: null, valueStored: boolean) => void)
+    ): void
+    /**
+     * `Bot API 6.9+` A method that receives a value from the cloud storage using the
+     * specified key. The key should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. In case of an error, the *callback* function will be
+     * called and the first argument will contain the error. In case of success, the first
+     * argument will be *null* and the value will be passed as the second argument.
+     */
+    getItem(
+      key: string,
+      callback: ((error: Error) => void) | ((error: null, value: string) => void)
+    ): void
+    /**
+     * `Bot API 6.9+` A method that receives values from the cloud storage using the
+     * specified keys. The keys should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. In case of an error, the *callback* function will be
+     * called and the first argument will contain the error. In case of success, the first
+     * argument will be *null* and the values will be passed as the second argument.
+     */
+    getItems(
+      keys: string[],
+      callback: ((error: Error) => void) | ((error: null, values: string[]) => void)
+    ): void
+    /**
+     * `Bot API 6.9+` A method that removes a value from the cloud storage using the
+     * specified key. The key should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. If an optional *callback* parameter was passed, the
+     * *callback* function will be called. In case of an error, the first argument will
+     * contain the error. In case of success, the first argument will be *null* and the
+     * second argument will be a boolean indicating whether the value was removed.
+     */
+    removeItem(
+      key: string,
+      callback?: ((error: Error) => void) | ((error: null, valueRemove: boolean) => void)
+    ): void
+    /**
+     * `Bot API 6.9+` A method that removes values from the cloud storage using the
+     * specified keys. The keys should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. If an optional *callback* parameter was passed, the
+     * *callback* function will be called. In case of an error, the first argument will
+     * contain the error. In case of success, the first argument will be *null* and the
+     * second argument will be a boolean indicating whether the values were removed.
+     */
+    removeItems(
+      keys: string[],
+      callback?:
+        | ((error: Error) => void)
+        | ((error: null, valuesRemoved: boolean) => void)
+    ): void
+    /**
+     * `Bot API 6.9+` A method that receives the list of all keys stored in the cloud
+     * storage. In case of an error, the *callback* function will be called and the first
+     * argument will contain the error. In case of success, the first argument will be
+     * *null* and the list of keys will be passed as the second argument.
+     */
+    getKeys(
+      callback: ((error: Error) => void) | ((error: null, keys: string[]) => void)
+    ): void
+  }
+
+  /**
    * This object contains data that is transferred to the Web App when it is opened. It is
    * empty if the Web App was launched from a keyboard button.
    */
@@ -742,7 +869,15 @@ export declare namespace TelegramWebApps {
     /**
      * *True*, if this user is a Telegram Premium user
      */
-    readonly is_premium?: boolean
+    readonly is_premium?: true
+    /**
+     * *True*, if this user added the bot to the attachment menu.
+     */
+    readonly added_to_attachment_menu?: true
+    /**
+     * *True*, if this user allowed the bot to message them.
+     */
+    readonly allows_write_to_pm?: true
     /**
      * URL of the user’s profile photo. The photo can be in .jpeg or .svg formats. Only
      * returned for Web Apps launched from the attachment menu.
