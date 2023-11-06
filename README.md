@@ -25,13 +25,19 @@
 via `npm` :
 
 ```bash
-npm install telegram-webapps
+npm install telegram-webapps --save-dev
 ```
 
 via `yarn` :
 
 ```bash
-yarn add telegram-webapps
+yarn add telegram-webapps --dev
+```
+
+via `pnpm` :
+
+```bash
+yarn add telegram-webapps -D
 ```
 
 ### Use typings
