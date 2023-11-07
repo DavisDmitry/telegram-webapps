@@ -31,13 +31,13 @@ npm install telegram-webapps --save-dev
 via `yarn` :
 
 ```bash
-yarn add telegram-webapps --dev
+yarn add -D telegram-webapps
 ```
 
 via `pnpm` :
 
 ```bash
-yarn add telegram-webapps -D
+pnpm add -D telegram-webapps
 ```
 
 ### Use typings
