@@ -553,7 +553,7 @@ export declare namespace TelegramWebApps {
     /**
      * Shows whether the button is visible. Set to *false* by default.
      */
-    isVisibile: boolean
+    isVisible: boolean
     /**
      * `Bot API 6.1+` A method that sets the button press event handler. An alias for
      * `Telegram.WebApp.onEvent('backButtonClicked', callback)`
