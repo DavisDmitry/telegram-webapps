@@ -165,6 +165,10 @@ export declare namespace TelegramWebApps {
      */
     readonly CloudStorage: CloudStorage
     /**
+     * An object for controlling biometrics on the device.
+     */
+    readonly BiometricManager: BiometricManager
+    /**
      * Returns true if the user's app supports a version of the Bot API that is equal to
      * or higher than the version passed as the parameter.
      */
@@ -312,6 +316,34 @@ export declare namespace TelegramWebApps {
       eventHandler: (status: 'sent' | 'cancelled') => void
     ): void
     /**
+     * `Bot API 7.2+` Occurs whenever `BiometricManager` object is changed
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'biometricManagerUpdated', eventHandler: () => void): void
+    /**
+     * 	`Bot API 7.2+` Occurs whenever biometric authentication was requested.
+     *
+     * *eventHandler* receives an object with the field *isAuthenticated* containing a
+     * boolean indicating whether the user was authenticated successfully. If
+     * *isAuthenticated* is true, the field *biometricToken() will contain the biometric
+     * token stored in secure storage on the device.
+     */
+    onEvent(
+      eventType: 'biometricAuthRequested',
+      eventHandler: BiometricAuthRequestedEventHandler
+    ): void
+    /**
+     * `Bot API 7.2+` Occurs whenever the biometric token was updated.
+     *
+     * *eventHandler* receives an object with the single field *isUpdated*, containing a
+     * boolean indicating whether the token was updated.
+     */
+    onEvent(
+      eventType: 'biometricTokenUpdated',
+      eventHandler: BiometricTokenUpdatedEventHandler
+    ): void
+    /**
      * A method that deletes a previously set event handler.
      */
     offEvent(
@@ -319,7 +351,8 @@ export declare namespace TelegramWebApps {
         | 'themeChanged'
         | 'mainButtonClicked'
         | 'backButtonClicked'
-        | 'settingsButtonClicked',
+        | 'settingsButtonClicked'
+        | 'biometricManagerUpdated',
       eventHandler: () => void
     ): void
     /**
@@ -347,6 +380,20 @@ export declare namespace TelegramWebApps {
     offEvent(
       eventType: 'clipboardTextReceived',
       eventHandler: ClipboardTextReceivedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'biometricAuthRequested',
+      eventHandler: BiometricAuthRequestedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'biometricTokenUpdated',
+      eventHandler: BiometricTokenUpdatedEventHandler
     ): void
     /**
      * A method used to send data to the bot. When this method is called, a service
@@ -807,7 +854,7 @@ export declare namespace TelegramWebApps {
       key: string,
       value: string,
       callback?: ((error: Error) => void) | ((error: null, valueStored: boolean) => void)
-    ): void
+    ): CloudStorage
     /**
      * `Bot API 6.9+` A method that receives a value from the cloud storage using the
      * specified key. The key should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
@@ -818,7 +865,7 @@ export declare namespace TelegramWebApps {
     getItem(
       key: string,
       callback: ((error: Error) => void) | ((error: null, value: string) => void)
-    ): void
+    ): CloudStorage
     /**
      * `Bot API 6.9+` A method that receives values from the cloud storage using the
      * specified keys. The keys should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
@@ -829,7 +876,7 @@ export declare namespace TelegramWebApps {
     getItems(
       keys: string[],
       callback: ((error: Error) => void) | ((error: null, values: string[]) => void)
-    ): void
+    ): CloudStorage
     /**
      * `Bot API 6.9+` A method that removes a value from the cloud storage using the
      * specified key. The key should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
@@ -841,7 +888,7 @@ export declare namespace TelegramWebApps {
     removeItem(
       key: string,
       callback?: ((error: Error) => void) | ((error: null, valueRemove: boolean) => void)
-    ): void
+    ): CloudStorage
     /**
      * `Bot API 6.9+` A method that removes values from the cloud storage using the
      * specified keys. The keys should contain 1-128 characters, only `A-Z`, `a-z`, `0-9`,
@@ -855,7 +902,7 @@ export declare namespace TelegramWebApps {
       callback?:
         | ((error: Error) => void)
         | ((error: null, valuesRemoved: boolean) => void)
-    ): void
+    ): CloudStorage
     /**
      * `Bot API 6.9+` A method that receives the list of all keys stored in the cloud
      * storage. In case of an error, the *callback* function will be called and the first
@@ -864,7 +911,116 @@ export declare namespace TelegramWebApps {
      */
     getKeys(
       callback: ((error: Error) => void) | ((error: null, keys: string[]) => void)
-    ): void
+    ): CloudStorage
+  }
+
+  /**
+   * This object controls biometrics on the device. Before the first use of this object,
+   * it needs to be initialized using the init method.
+   */
+  interface BiometricManager {
+    /**
+     * `Bot API 7.2+` Shows whether biometrics object is initialized.
+     */
+    readonly isInited: boolean
+    /**
+     * `Bot API 7.2+` Shows whether biometrics is available on the current device.
+     */
+    readonly isBiometricAvailable: boolean
+    /**
+     * `Bot API 7.2+` The type of biometrics currently available on the device.
+     *
+     * Can be one of these values:
+     * - *finger*, fingerprint-based biometrics,
+     * - *face*, face-based biometrics,
+     * - *unknown*, biometrics of an unknown type.
+     */
+    readonly biometricType: 'finger' | 'face' | 'unknown'
+    /**
+     * `Bot API 7.2+` Shows whether permission to use biometrics has been requested.
+     */
+    readonly isAccessRequested: boolean
+    /**
+     * `Bot API 7.2+` Shows whether permission to use biometrics has been granted.
+     */
+    readonly isAccessGranted: boolean
+    /**
+     * `Bot API 7.2+` Shows whether the token is saved in secure storage on the device.
+     */
+    readonly isBiometricTokenSaved: boolean
+    /**
+     * `Bot API 7.2+` A unique device identifier that can be used to match the token to
+     * the device.
+     */
+    readonly deviceId: string
+    /**
+     * `Bot API 7.2+` A method that initializes the BiometricManager object. It should be
+     * called before the object's first use. If an optional *callback* parameter was
+     * passed, the *callback* function will be called when the object is initialized.
+     */
+    init(callback?: () => void): BiometricManager
+    /**
+     * `Bot API 7.2+` A method that requests permission to use biometrics according to the
+     * *params* argument of type `BiometricRequestAccessParams`. If an optional *callback*
+     * parameter was passed, the *callback* function will be called and the first argument
+     * will be a boolean indicating whether the user granted access.
+     */
+    requestAccess(
+      params: BiometricRequestAccessParams,
+      callback?: (accessGranted: boolean) => void
+    ): BiometricManager
+    /**
+     * `Bot API 7.2+` A method that authenticates the user using biometrics according to
+     * the *params* argument of type `BiometricAuthenticateParams`. If an optional
+     * *callback* parameter was passed, the *callback* function will be called and the
+     * first argument will be a boolean indicating whether the user authenticated
+     * successfully. If so, the second argument will be a biometric token.
+     */
+    authenticate(
+      params: BiometricAuthenticateParams,
+      callback?: (authenticatedSuccessfully: boolean) => void
+    ): BiometricManager
+    /**
+     * `Bot API 7.2+` A method that updates the biometric token in secure storage on the
+     * device. To remove the token, pass an empty string. If an optional *callback*
+     * parameter was passed, the *callback* function will be called and the first argument
+     * will be a boolean indicating whether the token was updated.
+     */
+    updateBiometricToken(
+      token: string,
+      callback?: (tokenPassed: boolean) => void
+    ): BiometricManager
+    /**
+     * `Bot API 7.2+` A method that opens the biometric access settings for bots. Useful
+     * when you need to request biometrics access to users who haven't granted it yet.
+     *
+     * *Note that this method can be called only in response to user interaction with the
+     * Mini App interface (e.g. a click inside the Mini App or on the main button)*
+     */
+    openSettings(): BiometricManager
+  }
+
+  /**
+   * This object describes the native popup for requesting permission to use biometrics.
+   */
+  interface BiometricRequestAccessParams {
+    /**
+     * The text to be displayed to a user in the popup describing why the bot needs access
+     * to biometrics, 0-128 characters.
+     */
+    reason?: string
+  }
+
+  /**
+   * This object describes the native popup for authenticating the user using biometrics.
+   */
+  interface BiometricAuthenticateParams {
+    /**
+     * The text to be displayed to a user in the popup describing why you are asking them
+     * to authenticate and what action you will be taking based on that authentication,
+     * 0-128 characters.
+     */
+    reason?: string
   }
 
   /**
@@ -1009,6 +1165,10 @@ export declare namespace TelegramWebApps {
   type PopupClosedEventHandler = (params: { button_id: string | null }) => void
   type QrTextReceivedEventHandler = (params: { data: string }) => void
   type ClipboardTextReceivedEventHandler = (params: { data: string | null }) => void
+  type BiometricAuthRequestedEventHandler = (
+    params: { isAuthenticated: true; biometricToken: string } | { isAuthenticated: false }
+  ) => void
+  type BiometricTokenUpdatedEventHandler = (params: { isUpdated: boolean }) => void
 }
 
 declare global {
