@@ -1,10 +1,14 @@
 {
   "name": "telegram-webapps",
-  "version": "7.0.0",
-  "description": "Typings for Telegram Web Apps",
+  "version": "7.2.0",
+  "description": "Typings for Telegram Mini Apps",
   "keywords": [
     "telegram",
     "telegram-webapps",
+    "telegram-web-apps",
+    "telegram-miniapps",
+    "telegram-mini-apps",
+    "telegram-bot",
     "typescript",
     "types",
     "typings"
@@ -21,16 +25,11 @@
     "url": "https://github.com/DavisDmitry/telegram-webapps.git"
   },
   "scripts": {
-    "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --check . --write ."
+    "lint": "prettier --check src",
+    "format": "prettier -w src"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.48.0",
-    "eslint-config-prettier": "^8.10.0",
-    "prettier": "^2.8.2",
-    "prettier-plugin-sort-imports": "^1.7.1",
-    "typescript": "^4.9.4"
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.4"
   }
 }

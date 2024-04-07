@@ -1,4 +1,4 @@
-<h1 align="center">Typings for Telegram Web Apps</h1>
+<h1 align="center">Typings for Telegram Mini Apps</h1>
 
 <p align="center">
 <a href="https://npmjs.com/package/telegram-webapps"><img alt="Version" src="https://img.shields.io/npm/v/telegram-webapps"/></a>
@@ -6,7 +6,7 @@
 <a href="https://npmjs.com/package/telegram-webapps"><img alt="npm" src="https://img.shields.io/npm/dt/telegram-webapps"/></a>
 </p>
 <p align="center">
-<a href="https://core.telegram.org/bots/webapps"><img alt="Telegram Bot API Version 7.0" src="https://img.shields.io/badge/Telegram%20Bot%20API-7.0-blue.svg?logo=telegram"/></a>
+<a href="https://core.telegram.org/bots/webapps"><img alt="Telegram Bot API Version 7.2" src="https://img.shields.io/badge/Telegram%20Bot%20API-7.2-blue.svg?logo=telegram"/></a>
 </p>
 <p align="center">
 <a href="https://github.com/DavisDmitry/telegram-webapps/actions/workflows/lint.yml"><img alt="CI Lint" src="https://github.com/DavisDmitry/telegram-webapps/actions/workflows/lint.yml/badge.svg"/></a>
@@ -14,7 +14,7 @@
 
 ---
 
-<p align="center"><a href="https://core.telegram.org/bots/webapps">About Telegram Web Apps</a></p>
+<p align="center"><a href="https://core.telegram.org/bots/webapps">About Telegram Mini Apps</a></p>
 
 ---
 

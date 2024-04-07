@@ -2,7 +2,5 @@
   "printWidth": 90,
   "semi": false,
   "singleQuote": true,
-  "trailingComma": "none",
-  "plugins": ["prettier-plugin-sort-imports"],
-  "pluginSearchDirs": false
+  "trailingComma": "none"
 }
