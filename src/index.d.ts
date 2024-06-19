@@ -1050,12 +1050,23 @@ export declare namespace TelegramWebApps {
      */
     readonly chat?: WebAppChat
     /**
-     * The value of the *startattach* parameter, passed via link. Only returned for Web
-     * Apps when launched from the attachment menu via link.
-     *
-     * The value of the `start_param` parameter will also be passed in the GET-parameter
-     * `tgWebAppStartParam`, so the Web App can load the correct interface right away.
-     */
+     * Type of the chat from which the Mini App was opened. Can be either “sender” for a
+     * private chat with the user opening the link, “private”, “group”, “supergroup”, or
+     * “channel”. Returned only for Mini Apps launched from direct links.
+    */
+   readonly chat_type?: "sender" | "private" | "group" | "supergroup" | "channel"
+   /**
+    * Global identifier, uniquely corresponding to the chat from which the Mini App was
+    * opened. Returned only for Mini Apps launched from a direct link.
+    */
+   readonly chat_instance?: string
+   /**
+    * The value of the *startattach* parameter, passed via link. Only returned for Web
+    * Apps when launched from the attachment menu via link.
+    *
+    * The value of the `start_param` parameter will also be passed in the GET-parameter
+    * `tgWebAppStartParam`, so the Web App can load the correct interface right away.
+    */
     readonly start_param?: string
     /**
      * Time in seconds, after which a message can be sent via the answerWebAppQuery
