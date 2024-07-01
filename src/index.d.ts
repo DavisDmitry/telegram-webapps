@@ -596,6 +596,12 @@ export declare namespace TelegramWebApps {
      */
     section_header_text_color?: `#${string}`
     /**
+     * `Bot API 7.6+` Section separator color in the `#RRGGBB` format.
+     *
+     * Also available as the CSS variable `var(--tg-theme-section-separator-color)`.
+     */
+    section_separator_color?: `#${string}`
+    /**
      * `Bot API 7.0+` Subtitle text color in the `#RRGGBB` format.
      *
      * Also available as the CSS variable `var(--tg-theme-subtitle-text-color)`.
