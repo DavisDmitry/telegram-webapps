@@ -446,6 +446,12 @@ export declare namespace TelegramWebApps {
      */
     openInvoice(url: string, callback?: InvoiceClosedEventHandler): void
     /**
+     * `Bot API 7.8+` A method that opens the native story editor with the media specified
+     * in the *media_url* parameter as an HTTPS URL. An optional *params* argument of the
+     * type StoryShareParams describes additional sharing settings.
+     */
+    shareToStory(media_url: string, params?: StoryShareParams): void
+    /**
      * `Bot API 6.2+` A method that shows a native popup described by the *params*
      * argument of the type PopupParams. The Web App will receive the event *popupClosed*
      * when the popup is closed. If an optional *callback* parameter was passed, the
@@ -640,6 +646,37 @@ export declare namespace TelegramWebApps {
      * Also available as the CSS variable `var(--tg-theme-destructive-text-color)`.
      */
     destructive_text_color?: string
+  }
+
+  /**
+   * This object describes additional sharing settings for the native story editor.
+   */
+  interface StoryShareParams {
+    /**
+     * The caption to be added to the media, 0-200 characters for regular users and 0-2048
+     * characters for premium subscribers.
+     */
+    text?: string
+    /**
+     * An object that describes a widget link to be included in the story. Note that only
+     * premium subscribers can post stories with links.
+     */
+    widget_link?: StoryWidgetLink
+  }
+
+  /**
+   * This object describes a widget link to be included in the story.
+   */
+
+  interface StoryWidgetLink {
+    /**
+     * The URL to be included in the story.
+     */
+    url: string
+    /**
+     * The name to be displayed for the widget link, 0-48 characters.
+     */
+    name?: string
   }
 
   /**

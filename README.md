@@ -6,7 +6,7 @@
 <a href="https://npmjs.com/package/telegram-webapps"><img alt="npm" src="https://img.shields.io/npm/dt/telegram-webapps"/></a>
 </p>
 <p align="center">
-<a href="https://core.telegram.org/bots/webapps"><img alt="Telegram Bot API Version 7.7" src="https://img.shields.io/badge/Telegram%20Bot%20API-7.7-blue.svg?logo=telegram"/></a>
+<a href="https://core.telegram.org/bots/webapps"><img alt="Telegram Bot API Version 7.8" src="https://img.shields.io/badge/Telegram%20Bot%20API-7.8-blue.svg?logo=telegram"/></a>
 </p>
 <p align="center">
 <a href="https://github.com/DavisDmitry/telegram-webapps/actions/workflows/lint.yml"><img alt="CI Lint" src="https://github.com/DavisDmitry/telegram-webapps/actions/workflows/lint.yml/badge.svg"/></a>
@@ -47,7 +47,7 @@ Include the types file inside your [ `tsconfig.json` ](https://www.typescriptlan
 ```diff
 {
   "compilerOptions": {
-    "typeRoots": [
+    "types": [
 +     "./node_modules/telegram-webapps"
     ]
   }
