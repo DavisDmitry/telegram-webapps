@@ -245,7 +245,7 @@ export declare namespace TelegramWebApps {
     onEvent(eventType: 'mainButtonClicked', eventHandler: () => void): void
     /**
      * A method that sets the app event handler.
-     * 
+     *
      * `Bot API 7.10+` Occurs when the secondary button is pressed.
      */
     onEvent(eventType: 'secondaryButtonClicked', eventHandler: () => void): void
