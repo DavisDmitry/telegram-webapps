@@ -137,6 +137,10 @@ export declare namespace TelegramWebApps {
      */
     readonly backgroundColor: string
     /**
+     * Current bottom bar color in the `#RRGGBB` format.
+     */
+    readonly bottomBarColor: string
+    /**
      * *True*, if the confirmation dialog is enabled while the user is trying to close the
      * Web App. *False*, if the confirmation dialog is disabled.
      */
@@ -150,7 +154,12 @@ export declare namespace TelegramWebApps {
      * An object for controlling the main button, which is displayed at the bottom of the
      * Web App in the Telegram interface.
      */
-    readonly MainButton: MainButton
+    readonly MainButton: BottomButton
+    /**
+     * An object for controlling the secondary button, which is displayed at the bottom of
+     * the Mini App in the Telegram interface.
+     */
+    readonly SecondaryButton: BottomButton
     /**
      * An object for controlling the Settings item in the context menu of the Mini App in
      * the Telegram interface.
@@ -187,6 +196,12 @@ export declare namespace TelegramWebApps {
      * or you can use keywords *bg_color*, *secondary_bg_color* instead.
      */
     setBackgroundColor(color: string): void
+    /**
+     * `Bot API 7.10+` A method that sets the app's bottom bar color in the `#RRGGBB`
+     * format. You can also use the keywords *bg_color*, *secondary_bg_color* and
+     * *bottom_bar_bg_color*.
+     */
+    setBottomBarColor(color: string): void
     /**
      * `Bot API 6.2+` A method that enables a confirmation dialog while the user is trying
      * to close the Web App.
@@ -228,6 +243,12 @@ export declare namespace TelegramWebApps {
      * Event occurs when the main button is pressed.
      */
     onEvent(eventType: 'mainButtonClicked', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     * 
+     * `Bot API 7.10+` Occurs when the secondary button is pressed.
+     */
+    onEvent(eventType: 'secondaryButtonClicked', eventHandler: () => void): void
     /**
      * A method that sets the app event handler.
      *
@@ -356,6 +377,7 @@ export declare namespace TelegramWebApps {
       eventType:
         | 'themeChanged'
         | 'mainButtonClicked'
+        | 'secondaryButtonClicked'
         | 'backButtonClicked'
         | 'settingsButtonClicked'
         | 'biometricManagerUpdated',
@@ -610,6 +632,12 @@ export declare namespace TelegramWebApps {
      */
     header_bg_color?: string
     /**
+     * `Bot API 7.10+` Bottom background color in the `#RRGGBB` format.
+     *
+     * Also available as the CSS variable `var(--tg-theme-bottom-bar-bg-color)`.
+     */
+    bottom_bar_bg_color?: string
+    /**
      * `Bot API 7.0+` Accent text color in the `#RRGGBB` format.
      *
      * Also available as the CSS variable `var(--tg-theme-accent-text-color)`.
@@ -743,20 +771,28 @@ export declare namespace TelegramWebApps {
   }
 
   /**
-   * This object controls the main button, which is displayed at the bottom of the Web App
-   * in the Telegram interface.
+   * This object controls the button that is displayed at the bottom of the Mini App in
+   * the Telegram interface.
    */
-  interface MainButton {
+  interface BottomButton {
     /**
-     * Current button text. Set to *CONTINUE* by default.
+     * Type of the button. It can be either *main* for the main button or *secondary* for
+     * the secondary button.
+     */
+    readonly type: 'main' | 'secondary'
+    /**
+     * Current button text. Set to *Continue* for the main button and *Cancel* for the
+     * secondary button by default.
      */
     text: string
     /**
-     * Current button color. Set to *themeParams.button_color* by default.
+     * Current button color. Set to *themeParams.button_color* for the main button and
+     * *themeParams.bottom_bar_bg_color* for the secondary button by default.
      */
     color: string
     /**
-     * Current button text color. Set to *themeParams.button_text_color* by default.
+     * Current button text color. Set to *themeParams.button_text_color* for the main
+     * button and *themeParams.button_color* for the secondary button by default.
      */
     textColor: string
     /**
@@ -768,42 +804,58 @@ export declare namespace TelegramWebApps {
      */
     isActive: boolean
     /**
+     * `Bot API 7.10+` Shows whether the button has a shine effect. Set to *false* by
+     * default.
+     */
+    hasShineEffect: boolean
+    /**
+     * `Bot API 7.10+` Position of the secondary button. Not defined for the main button.
+     * It applies only if both the main and secondary buttons are visible. Set to *left*
+     * by default.
+     * Supported values:
+     * - *left*, displayed to the left of the main button,
+     * - *right*, displayed to the right of the main button.
+     * - *top*, displayed above the main button,
+     * - *bottom*, displayed below the main button.
+     */
+    position: 'left' | 'right' | 'top' | 'bottom'
+    /**
      * Shows whether the button is displaying a loading indicator.
      */
     readonly isProgressVisible: boolean
     /**
      * A method to set the button text.
      */
-    setText(text: string): MainButton
+    setText(text: string): BottomButton
     /**
      * A method that sets the button press event handler. An alias for
      * `Telegram.WebApp.onEvent('mainButtonClicked', callback)`
      */
-    onClick(callback: () => void): MainButton
+    onClick(callback: () => void): BottomButton
     /**
      * A method that removes the button press event handler. An alias for
      * `Telegram.WebApp.offEvent('mainButtonClicked', callback)`
      */
-    offClick(callback: () => void): MainButton
+    offClick(callback: () => void): BottomButton
     /**
      * A method to make the button visible.
      *
      * *Note that opening the Web App from the attachment menu hides the main button until
      * the user interacts with the Web App interface.*
      */
-    show(): MainButton
+    show(): BottomButton
     /**
      * A method to hide the button.
      */
-    hide(): MainButton
+    hide(): BottomButton
     /**
      * A method to enable the button.
      */
-    enable(): MainButton
+    enable(): BottomButton
     /**
      * A method to disable the button.
      */
-    disable(): MainButton
+    disable(): BottomButton
     /**
      * A method to show a loading indicator on the button.
      *
@@ -812,20 +864,24 @@ export declare namespace TelegramWebApps {
      * progress. If the parameter `leaveActive=true` is passed, the button remains
      * enabled.
      */
-    showProgress(leaveActive?: boolean): MainButton
+    showProgress(leaveActive?: boolean): BottomButton
     /**
      * A method to hide the loading indicator.
      */
-    hideProgress(): MainButton
+    hideProgress(): BottomButton
     /**
-     * A method to set the button parameters. The params parameter is an object containing
-     * one or several fields that need to be changed:
+     * A method to set the button parameters. The *params* parameter is an object
+     * containing one or several fields that need to be changed:
      *
      * **text** - button text;
      *
      * **color** - button color;
      *
      * **text_color** - button text color;
+     *
+     * **has_shine_effect** - `Bot API 7.10+` enable shine effect;
+     *
+     * **position** - `Bot API 7.10+` position of the secondary button;
      *
      * **is_active** - enable the button;
      *
@@ -835,9 +891,11 @@ export declare namespace TelegramWebApps {
       text?: string
       color?: string
       text_color?: string
+      has_shine_effect?: boolean
+      position?: 'left' | 'right' | 'top' | 'bottom'
       is_active?: boolean
       is_visible?: boolean
-    }): MainButton
+    }): BottomButton
   }
 
   /**
