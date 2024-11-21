@@ -20,7 +20,7 @@
 
 ## Usage
 
-### Instal
+### Installation
 
 via `npm` :
 
