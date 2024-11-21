@@ -89,6 +89,11 @@ export declare namespace TelegramWebApps {
      */
     readonly themeParams: ThemeParams
     /**
+     * `Bot API 8.0+` *True*, if the Mini App is currently active. *False*, if the Mini
+     * App is minimized.
+     */
+    readonly isActive: boolean
+    /**
      * *True*, if the Web App is expanded to the maximum available height. *False*, if the
      * Web App occupies part of the screen and can be expanded to the full height using
      * the **expand()** method.
@@ -146,6 +151,16 @@ export declare namespace TelegramWebApps {
      */
     readonly isClosingConfirmationEnabled: boolean
     /**
+     * An object representing the device's safe area insets, accounting for system UI
+     * elements like notches or navigation bars.
+     */
+    readonly safeAreaInset: SafeAreaInset
+    /**
+     * An object representing the safe area for displaying content within the app, free
+     * from overlapping Telegram UI elements.
+     */
+    readonly contentSafeAreaInset: ContentSafeAreaInset
+    /**
      * An object for controlling the back button which can be displayed in the header of
      * the Web App in the Telegram interface.
      */
@@ -177,6 +192,22 @@ export declare namespace TelegramWebApps {
      * An object for controlling biometrics on the device.
      */
     readonly BiometricManager: BiometricManager
+    /**
+     * An object for accessing accelerometer data on the device.
+     */
+    readonly Accelerometer: Accelerometer
+    /**
+     * An object for accessing device orientation data on the device.
+     */
+    readonly DeviceOrientation: DeviceOrientation
+    /**
+     * An object for accessing gyroscope data on the device.
+     */
+    readonly Gyroscope: Gyroscope
+    /**
+     * An object for controlling location on the device
+     */
+    readonly LocationManager: LocationManager
     /**
      * Returns true if the user's app supports a version of the Bot API that is equal to
      * or higher than the version passed as the parameter.
@@ -215,6 +246,24 @@ export declare namespace TelegramWebApps {
     /**
      * A method that sets the app event handler.
      *
+     * `Bot API 8.0+` Occurs when the Mini App becomes active (e.g., opened from minimized
+     * state or selected among tabs).
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'activated', callback: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when the Mini App becomes inactive (e.g., minimized or moved
+     * to an inactive tab).
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'deactivated', callback: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
      * Event occurs whenever theme settings are changed in the user's Telegram app (including
      * switching to night mode).
      *
@@ -237,6 +286,29 @@ export declare namespace TelegramWebApps {
      * available in *this.viewportHeight*.
      */
     onEvent(eventType: 'viewportChanged', eventHandler: ViewportChangedEventHandler): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when the device's safe area insets change (e.g., due to
+     * orientation change or screen adjustments).
+     *
+     * *eventHandler* receives no parameters. The current inset values can be accessed via
+     * *this.safeAreaInset*.
+     */
+    onEvent(eventType: 'safeAreaChanged', eventHandler: SafeAreaChangedEventHandler): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when the safe area for content changes (e.g., due to
+     * orientation change or screen adjustments).
+     *
+     * *eventHandler* receives no parameters. The current inset values can be accessed via
+     * *this.contentSafeAreaInset*.
+     */
+    onEvent(
+      eventType: 'contentSafeAreaChanged',
+      eventHandler: ContentSafeAreaChangedEventHandler
+    ): void
     /**
      * A method that sets the app event handler.
      *
@@ -343,12 +415,16 @@ export declare namespace TelegramWebApps {
       eventHandler: (status: 'sent' | 'cancelled') => void
     ): void
     /**
+     * A method that sets the app event handler.
+     *
      * `Bot API 7.2+` Occurs whenever `BiometricManager` object is changed
      *
      * *eventHandler* receives no parameters.
      */
     onEvent(eventType: 'biometricManagerUpdated', eventHandler: () => void): void
     /**
+     * A method that sets the app event handler.
+     *
      * 	`Bot API 7.2+` Occurs whenever biometric authentication was requested.
      *
      * *eventHandler* receives an object with the field *isAuthenticated* containing a
@@ -361,6 +437,8 @@ export declare namespace TelegramWebApps {
       eventHandler: BiometricAuthRequestedEventHandler
     ): void
     /**
+     * A method that sets the app event handler.
+     *
      * `Bot API 7.2+` Occurs whenever the biometric token was updated.
      *
      * *eventHandler* receives an object with the single field *isUpdated*, containing a
@@ -371,16 +449,304 @@ export declare namespace TelegramWebApps {
       eventHandler: BiometricTokenUpdatedEventHandler
     ): void
     /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs whenever the Mini App enters or exits fullscreen mode.
+     *
+     * *eventHandler* receives no parameters. The current fullscreen state can be checked
+     * via *this.isFullscreen*.
+     */
+    onEvent(
+      eventType: 'fullscreenChanged',
+      eventHandler: FullscreenChangedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs if a request to enter fullscreen mode fails.
+     *
+     * *eventHandler* receives an object with the single field *error, describing the
+     * reason for the failure. Possible values for error are:
+     * - **UNSUPPORTED** – Fullscreen mode is not supported on this device or platform.
+     * - **ALREADY_FULLSCREEN** – The Mini App is already in fullscreen mode.
+     */
+    onEvent(
+      eventType: 'fullscreenFailed',
+      eventHandler: FullscreenFailedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when the Mini App is successfully added to the home screen.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'homeScreenAdded', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs after checking the home screen status.
+     *
+     * *eventHandler* receives an object with the field *status*, which is a string
+     * indicating the current home screen status. Possible values for *status* are:
+     * - **unsupported** – the feature is not supported, and it is not possible to add the
+     * icon to the home screen,
+     * - **unknown** – the feature is supported, and the icon can be added, but it is not
+     * possible to determine if the icon has already been added,
+     * - **added** – the icon has already been added to the home screen,
+     * - **missed** – the icon has not been added to the home screen.
+     */
+    onEvent(
+      eventType: 'homeScreenChecked',
+      eventHandler: HomeScreenCheckedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when accelerometer tracking has started successfully.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'accelerometerStarted', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when accelerometer tracking has stopped.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'accelerometerStopped', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0`+ Occurs with the specified frequency after calling the `start`
+     * method, sending the current accelerometer data.
+     *
+     * *eventHandler* receives no parameters, the current acceleration values can be
+     * received via *this.x*, *this.y* and *this.z* respectively.
+     */
+    onEvent(
+      eventType: 'accelerometerChanged',
+      eventHandler: AccelerometerChangedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs if a request to start accelerometer tracking fails.
+     *
+     * *eventHandler* receives an object with the single field *error*, describing the
+     * reason for the failure. Possible values for *error* are:
+     * - **UNSUPPORTED** – Accelerometer tracking is not supported on this device or
+     * platform.
+     */
+    onEvent(
+      eventType: 'accelerometerFailed',
+      eventHandler: AccelerometerFailedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when device orientation tracking has started successfully.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'deviceOrientationStarted', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when device orientation tracking has stopped.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'deviceOrientationStopped', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs with the specified frequency after calling the `start`
+     * method, sending the current orientation data.
+     *
+     * *eventHandler* receives no parameters, the current device orientation values can
+     * be received via *this.alpha*, *this.beta* and *this.gamma* respectively.
+     */
+    onEvent(
+      eventType: 'deviceOrientationChanged',
+      eventHandler: DeviceOrientationChangedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs if a request to start device orientation tracking fails.
+     *
+     * *eventHandler* receives an object with the single field *error*, describing the
+     * reason for the failure. Possible values for *error* are:
+     * - **UNSUPPORTED** – Device orientation tracking is not supported on this device or
+     * platform.
+     */
+    onEvent(
+      eventType: 'deviceOrientationFailed',
+      eventHandler: DeviceOrientationFailedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when gyroscope tracking has started successfully.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'gyroscopeStarted', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when gyroscope tracking has stopped.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'gyroscopeStopped', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs with the specified frequency after calling the `start`
+     * method, sending the current gyroscope data.
+     *
+     * *eventHandler* receives no parameters, the current rotation rates can be received
+     * via *this.x*, *this.y* and *this.z* respectively.
+     */
+    onEvent(
+      eventType: 'gyroscopeChanged',
+      eventHandler: GyroscopeChangedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs if a request to start gyroscope tracking fails.
+     *
+     * *eventHandler* receives an object with the single field *error*, describing the
+     * reason for the failure. Possible values for *error* are:
+     * - **UNSUPPORTED** – Gyroscope tracking is not supported on this device or platform.
+     */
+    onEvent(eventType: 'gyroscopeFailed', eventHandler: GyroscopeFailedEventHandler): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs whenever LocationManager object is changed.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'locationManagerUpdated', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when location data is requested.
+     *
+     * *eventHandler* receives an object with the single field *locationData* of type
+     * LocationData, containing the current location information.
+     */
+    onEvent(
+      eventType: 'locationRequested',
+      eventHandler: LocationRequestedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when the message is successfully shared by the user.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'shareMessageSent', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs if sharing the message fails.
+     *
+     * *eventHandler* receives an object with the single field *error*, describing the
+     * reason for the failure. Possible values for *error* are:
+     * - **UNSUPPORTED** – The feature is not supported by the client.
+     * - **MESSAGE_EXPIRED** – The message could not be retrieved because it has expired.
+     * - **MESSAGE_SEND_FAILED** – An error occurred while attempting to send the message.
+     * - **USER_DECLINED** – The user closed the dialog without sharing the message.
+     * - **UNKNOWN_ERROR** – An unknown error occurred.
+     */
+    onEvent(
+      eventType: 'shareMessageFailed',
+      eventHandler: ShareMessageFailedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when the emoji status is successfully set.
+     *
+     * *eventHandler* receives no parameters.
+     */
+    onEvent(eventType: 'emojiStatusSet', eventHandler: () => void): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs if setting the emoji status fails.
+     *
+     * *eventHandler* receives an object with the single field *error*, describing the
+     * reason for the failure. Possible values for *error* are:
+     * - **UNSUPPORTED** – The feature is not supported by the client.
+     * - **SUGGESTED_EMOJI_INVALID** – One or more emoji identifiers are invalid.
+     * - **DURATION_INVALID** – The specified duration is invalid.
+     * - **USER_DECLINED** – The user closed the dialog without setting a status.
+     * - **SERVER_ERROR** – A server error occurred when attempting to set the status.
+     * - **UNKNOWN_ERROR** – An unknown error occurred.
+     */
+    onEvent(
+      eventType: 'emojiStatusFailed',
+      eventHandler: EmojiStatusFailedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when the write permission was requested.
+     *
+     * *eventHandler* receives an object with the single field *status* containing one of
+     * the statuses:
+     * - **allowed** – user granted emoji status permission to the bot,
+     * - **cancelled** – user declined this request.
+     */
+    onEvent(
+      eventType: 'emojiStatusAccessRequested',
+      eventHandler: EmojiStatusAccessRequestedEventHandler
+    ): void
+    /**
+     * A method that sets the app event handler.
+     *
+     * `Bot API 8.0+` Occurs when the user responds to the file download request.
+     *
+     * *eventHandler* receives an object with the single field *status* containing one of
+     * the statuses:
+     * - **downloading** – the file download has started,
+     * - **cancelled** – user declined this request.
+     */
+    onEvent(
+      eventType: 'fileDownloadRequested',
+      eventHandler: FileDownloadRequestedEventHandler
+    ): void
+    /**
      * A method that deletes a previously set event handler.
      */
     offEvent(
       eventType:
+        | 'activated'
+        | 'deactivated'
         | 'themeChanged'
         | 'mainButtonClicked'
         | 'secondaryButtonClicked'
         | 'backButtonClicked'
         | 'settingsButtonClicked'
-        | 'biometricManagerUpdated',
+        | 'biometricManagerUpdated'
+        | 'homeScreenAdded'
+        | 'accelerometerStarted'
+        | 'accelerometerStopped'
+        | 'deviceOrientationStarted'
+        | 'deviceOrientationStopped'
+        | 'gyroscopeStarted'
+        | 'gyroscopeStopped'
+        | 'locationManagerUpdated'
+        | 'shareMessageSent'
+        | 'emojiStatusSet',
       eventHandler: () => void
     ): void
     /**
@@ -389,6 +755,20 @@ export declare namespace TelegramWebApps {
     offEvent(
       eventType: 'viewportChanged',
       eventHandler: ViewportChangedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'safeAreaChanged',
+      eventHandler: SafeAreaChangedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'contentSafeAreaChanged',
+      eventHandler: ContentSafeAreaChangedEventHandler
     ): void
     /**
      * A method that deletes a previously set event handler.
@@ -422,6 +802,104 @@ export declare namespace TelegramWebApps {
     offEvent(
       eventType: 'biometricTokenUpdated',
       eventHandler: BiometricTokenUpdatedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'fullscreenChanged',
+      eventHandler: FullscreenChangedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'fullscreenFailed',
+      eventHandler: FullscreenFailedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'homeScreenChecked',
+      eventHandler: HomeScreenCheckedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'accelerometerChanged',
+      eventHandler: AccelerometerChangedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'accelerometerFailed',
+      eventHandler: AccelerometerFailedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'deviceOrientationChanged',
+      eventHandler: DeviceOrientationChangedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'deviceOrientationFailed',
+      eventHandler: DeviceOrientationFailedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'gyroscopeChanged',
+      eventHandler: GyroscopeChangedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'gyroscopeFailed',
+      eventHandler: GyroscopeFailedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'locationRequested',
+      eventHandler: LocationRequestedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'shareMessageFailed',
+      eventHandler: ShareMessageFailedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'emojiStatusFailed',
+      eventHandler: EmojiStatusFailedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'emojiStatusAccessRequested',
+      eventHandler: EmojiStatusAccessRequestedEventHandler
+    ): void
+    /**
+     * A method that deletes a previously set event handler.
+     */
+    offEvent(
+      eventType: 'fileDownloadRequested',
+      eventHandler: FileDownloadRequestedEventHandler
     ): void
     /**
      * A method used to send data to the bot. When this method is called, a service
@@ -473,6 +951,47 @@ export declare namespace TelegramWebApps {
      * type StoryShareParams describes additional sharing settings.
      */
     shareToStory(media_url: string, params?: StoryShareParams): void
+    /**
+     * `Bot API 8.0+` A method that opens a dialog allowing the user to share a message
+     * provided by the bot. If an optional *callback* parameter is provided, the
+     * *callback* function will be called with a boolean as the first argument, indicating
+     * whether the message was successfully sent. The message id passed to this method
+     * must belong to a PreparedInlineMessage previously obtained via the Bot API method
+     * savePreparedInlineMessage.
+     */
+    shareMessage(message_id: number, callback?: (sent: boolean) => void): void
+    /**
+     * `Bot API 8.0+` A method that opens a dialog allowing the user to set the specified
+     * custom emoji as their status. An optional *params* argument of type
+     * EmojiStatusParams specifies additional settings, such as duration. If an optional
+     * *callback* parameter is provided, the callback function will be called with a
+     * boolean as the first argument, indicating whether the status was set.
+     *
+     * *Note: this method opens a native dialog and cannot be used to set the emoji status
+     * without manual user interaction. For fully programmatic changes, you should instead
+     * use the Bot API method setUserEmojiStatus after obtaining authorization to do so
+     * via the Mini App method requestEmojiStatusAccess.*
+     */
+    setEmojiStatus(
+      custom_emoji_id: number,
+      params?: EmojiStatusParams,
+      callback?: (set: boolean) => void
+    ): void
+    /**
+     * `Bot API 8.0+` A method that shows a native popup requesting permission for the bot
+     * to manage user's emoji status. If an optional *callback* parameter was passed, the
+     * *callback* function will be called when the popup is closed and the first argument
+     * will be a boolean indicating whether the user granted this access.
+     */
+    requestEmojiStatusAccess(callback?: (accessGranted: boolean) => void): void
+    /**
+     * `Bot API 8.0+` A method that displays a native popup prompting the user to download
+     * a file specified by the *params* argument of type DownloadFileParams. If an
+     * optional *callback* parameter is provided, the *callback* function will be called
+     * when the popup is closed, with the first argument as a boolean indicating whether
+     * the user accepted the download request.
+     */
+    downloadFile(params: DownloadFileParams, callback?: (accepted: boolean) => void): void
     /**
      * `Bot API 6.2+` A method that shows a native popup described by the *params*
      * argument of the type PopupParams. The Web App will receive the event *popupClosed*
@@ -558,6 +1077,15 @@ export declare namespace TelegramWebApps {
      */
     close(): void
     /**
+     * *True*, if the Mini App is currently being displayed in fullscreen mode.
+     */
+    readonly isFullscreen: boolean
+    /**
+     * *True*, if the Mini App’s orientation is currently locked. *False*, if orientation
+     * changes freely based on the device’s rotation.
+     */
+    readonly isOrientationLocked: boolean
+    /**
      * *True*, if vertical swipes to close or minimize the Mini App are enabled. *False*,
      * if vertical swipes to close or minimize the Mini App are disabled. In any case, the
      * user will still be able to minimize and close the Mini App by swiping the Mini
@@ -576,6 +1104,53 @@ export declare namespace TelegramWebApps {
      * with the gestures for minimizing and closing the app.
      */
     disableVerticalSwipes(): void
+    /**
+     * `Bot API 8.0+` A method that requests opening the Mini App in fullscreen mode.
+     * Although the header is transparent in fullscreen mode, it is recommended that the
+     * Mini App sets the header color using the *setHeaderColor* method. This color helps
+     * determine a contrasting color for the status bar and other UI controls.
+     */
+    requestFullscreen(): void
+    /**
+     * `Bot API 8.0+` A method that requests exiting fullscreen mode.
+     */
+    exitFullscreen(): void
+    /**
+     * `Bot API 8.0+` A method that locks the Mini App’s orientation to its current mode
+     * (either portrait or landscape). Once locked, the orientation remains fixed,
+     * regardless of device rotation. This is useful if a stable orientation is needed
+     * during specific interactions.
+     */
+    lockOrientation(): void
+    /**
+     * `Bot API 8.0+` A method that unlocks the Mini App’s orientation, allowing it to
+     * follow the device's rotation freely. Use this to restore automatic orientation
+     * adjustments based on the device orientation.
+     */
+    unlockOrientation(): void
+    /**
+     * `Bot API 8.0+` A method that prompts the user to add the Mini App to the home
+     * screen. After successfully adding the icon, the `homeScreenAdded` event will be
+     * triggered if supported by the device. Note that if the device cannot determine the
+     * installation status, the event may not be received even if the icon has been added.
+     */
+    addToHomeScreen(): void
+    /**
+     * `Bot API 8.0+` A method that checks if adding to the home screen is supported and
+     * if the Mini App has already been added. If an optional *callback* parameter is
+     * provided, the callback function will be called with a single argument *status*,
+     * which is a string indicating the home screen status. Possible values for *status*
+     * are:
+     * - **unsupported** – the feature is not supported, and it is not possible to add the
+     * icon to the home screen,
+     * - **unknown** – the feature is supported, and the icon can be added, but it is not
+     * possible to determine if the icon has already been added,
+     * - **added** – the icon has already been added to the home screen,
+     * - **missed** – the icon has not been added to the home screen.
+     */
+    checkHomeScreenStatus(
+      callback?: (status: 'unsupported' | 'unknown' | 'added' | 'missed') => void
+    ): void
   }
 
   /**
@@ -740,6 +1315,89 @@ export declare namespace TelegramWebApps {
    * This object describes the native popup button.
    */
   type PopupButton = DefaultDestructivePopupButton | OkCloseCancelPopupButton
+
+  /**
+   * This object describes additional settings for setting an emoji status.
+   */
+  interface EmojiStatusParams {
+    /**
+     * The duration for which the status will remain set, in seconds.
+     */
+    duration?: number
+  }
+
+  /**
+   * This object describes the parameters for the file download request.
+   */
+  interface DownloadFileParams {
+    /**
+     * The HTTPS URL of the file to be downloaded.
+     */
+    url: string
+    /**
+     * The suggested name for the downloaded file.
+     */
+    name: string
+  }
+
+  /**
+   * This object represents the system-defined safe area insets, providing padding values
+   * to ensure content remains within visible boundaries, avoiding overlap with system UI
+   * elements like notches or navigation bars.
+   */
+  interface SafeAreaInset {
+    /**
+     * The top inset in pixels, representing the space to avoid at the top of the screen.
+     * Also available as the CSS variable `var(--tg-safe-area-inset-top)`.
+     */
+    top: number
+    /**
+     * The bottom inset in pixels, representing the space to avoid at the bottom of the
+     * screen. Also available as the CSS variable `var(--tg-safe-area-inset-bottom)`.
+     */
+    bottom: number
+    /**
+     * The left inset in pixels, representing the space to avoid on the left side of the
+     * screen. Also available as the CSS variable `var(--tg-safe-area-inset-left)`.
+     */
+    left: number
+    /**
+     * The right inset in pixels, representing the space to avoid on the right side of the
+     * screen. Also available as the CSS variable `var(--tg-safe-area-inset-right)`.
+     */
+    right: number
+  }
+
+  /**
+   * This object represents the content-defined safe area insets, providing padding values
+   * to ensure content remains within visible boundaries, avoiding overlap with Telegram
+   * UI elements.
+   */
+  interface ContentSafeAreaInset {
+    /**
+     * The top inset in pixels, representing the space to avoid at the top of the content
+     * area. Also available as the CSS variable `var(--tg-content-safe-area-inset-top)`.
+     */
+    top: number
+    /**
+     * The bottom inset in pixels, representing the space to avoid at the bottom of the
+     * content area. Also available as the CSS variable
+     * `var(--tg-content-safe-area-inset-bottom)`.
+     */
+    bottom: number
+    /**
+     * The left inset in pixels, representing the space to avoid on the left side of the
+     * content area. Also available as the CSS variable
+     * `var(--tg-content-safe-area-inset-left)`.
+     */
+    left: number
+    /**
+     * The right inset in pixels, representing the space to avoid on the right side of the
+     * content area. Also available as the CSS variable
+     * `var(--tg-content-safe-area-inset-right)`.
+     */
+    right: number
+  }
 
   /**
    * This object controls the back button, which can be displayed in the header of the Web
@@ -1152,6 +1810,262 @@ export declare namespace TelegramWebApps {
   }
 
   /**
+   * This object provides access to accelerometer data on the device.
+   */
+  interface Accelerometer {
+    /**
+     * Indicates whether accelerometer tracking is currently active.
+     */
+    isStarted: boolean
+    /**
+     * The current acceleration in the X-axis, measured in m/s².
+     */
+    x: number
+    /**
+     * The current acceleration in the Y-axis, measured in m/s².
+     */
+    y: number
+    /**
+     * The current acceleration in the Z-axis, measured in m/s².
+     */
+    z: number
+    /**
+     * `Bot API 8.0+` Starts tracking accelerometer data using *params* of type
+     * AccelerometerStartParams. If an optional *callback* parameter is provided, the
+     * *callback* function will be called with a boolean indicating whether tracking was
+     * successfully started.
+     */
+    start(
+      params: AccelerometerParams,
+      callback?: (started: boolean) => void
+    ): Accelerometer
+    /**
+     * `Bot API 8.0+` Stops tracking accelerometer data. If an optional *callback*
+     * parameter is provided, the *callback* function will be called with a boolean
+     * indicating whether tracking was successfully stopped.
+     */
+    stop(callback?: (stopped: boolean) => void): Accelerometer
+  }
+
+  /**
+   * This object defines the parameters for starting accelerometer tracking.
+   */
+  interface AccelerometerParams {
+    /**
+     * The refresh rate in milliseconds, with acceptable values ranging from 20 to 1000.
+     * Set to 1000 by default. Note that *refresh_rate* may not be supported on all
+     * platforms, so the actual tracking frequency may differ from the specified value.
+     */
+    refresh_rate?: number
+  }
+
+  /**
+   * This object provides access to orientation data on the device.
+   */
+  interface DeviceOrientation {
+    /**
+     * Indicates whether device orientation tracking is currently active.
+     */
+    isStarted: boolean
+    /**
+     * A boolean that indicates whether or not the device is providing orientation data in
+     * absolute values.
+     */
+    absolute: boolean
+    /**
+     * The rotation around the Z-axis, measured in radians.
+     */
+    alpha: number
+    /**
+     * The rotation around the X-axis, measured in radians.
+     */
+    beta: number
+    /**
+     * The rotation around the Y-axis, measured in radians.
+     */
+    gamma: number
+    /**
+     * `Bot API 8.0+` Starts tracking device orientation data using *params* of type
+     * DeviceOrientationStartParams. If an optional *callback* parameter is provided, the
+     * *callback* function will be called with a boolean indicating whether tracking was
+     * successfully started.
+     */
+    start(
+      params: DeviceOrientationParams,
+      callback?: (started: boolean) => void
+    ): DeviceOrientation
+    /**
+     * `Bot API 8.0+` Stops tracking device orientation data. If an optional *callback*
+     * parameter is provided, the *callback* function will be called with a boolean
+     * indicating whether tracking was successfully stopped.
+     */
+    stop(callback?: (stopped: boolean) => void): DeviceOrientation
+  }
+
+  /**
+   * This object defines the parameters for starting device orientation tracking.
+   */
+  interface DeviceOrientationParams {
+    /**
+     * The refresh rate in milliseconds, with acceptable values ranging from 20 to 1000.
+     * Set to 1000 by default. Note that *refresh_rate* may not be supported on all
+     * platforms, so the actual tracking frequency may differ from the specified value.
+     */
+    refresh_rate?: number
+    /**
+     * Pass *true* to receive absolute orientation data, allowing you to determine the
+     * device's attitude relative to magnetic north. Use this option if implementing
+     * features like a compass in your app. If relative data is sufficient, pass *false*.
+     * Set to *false* by default.
+     *
+     * **Note**: Keep in mind that some devices may not support absolute orientation data.
+     * In such cases, you will receive relative data even if *need_absolute=true* is
+     * passed. Check the *DeviceOrientation.absolute* parameter to determine whether the
+     * data provided is absolute or relative.
+     */
+    need_absolute?: boolean
+  }
+
+  /**
+   * This object provides access to gyroscope data on the device.
+   */
+  interface Gyroscope {
+    /**
+     * Indicates whether gyroscope tracking is currently active.
+     */
+    isStarted: boolean
+    /**
+     * The current rotation rate around the X-axis, measured in rad/s.
+     */
+    x: number
+    /**
+     * The current rotation rate around the Y-axis, measured in rad/s.
+     */
+    y: number
+    /**
+     * The current rotation rate around the Z-axis, measured in rad/s.
+     */
+    z: number
+    /**
+     * `Bot API 8.0+` Starts tracking gyroscope data using *params* of type
+     * GyroscopeStartParams. If an optional *callback* parameter is provided, the
+     * *callback* function will be called with a boolean indicating whether tracking was
+     * successfully started.
+     */
+    start(params: GyroscopeParams, callback?: (started: boolean) => void): Gyroscope
+    /**
+     * `Bot API 8.0+` Stops tracking gyroscope data. If an optional *callback* parameter
+     * is provided, the *callback* function will be called with a boolean indicating
+     * whether tracking was successfully stopped.
+     */
+    stop(callback?: (stopped: boolean) => void): Gyroscope
+  }
+
+  /**
+   * This object defines the parameters for starting gyroscope tracking.
+   */
+  interface GyroscopeParams {
+    /**
+     * The refresh rate in milliseconds, with acceptable values ranging from 20 to 1000.
+     * Set to 1000 by default. Note that *refresh_rate* may not be supported on all
+     * platforms, so the actual tracking frequency may differ from the specified value.
+     */
+    refresh_rate?: number
+  }
+
+  /**
+   * This object controls location access on the device. Before the first use of this
+   * object, it needs to be initialized using the *init* method.
+   */
+  interface LocationManager {
+    /**
+     * Shows whether the LocationManager object has been initialized.
+     */
+    isInited: boolean
+    /**
+     * Shows whether location services are available on the current device.
+     */
+    isLocationAvailable: boolean
+    /**
+     * Shows whether permission to use location has been requested.
+     */
+    isAccessRequested: boolean
+    /**
+     * Shows whether permission to use location has been granted.
+     */
+    isAccessGranted: boolean
+    /**
+     * `Bot API 8.0+` A method that initializes the LocationManager object. It should be
+     * called before the object's first use. If an optional *callback* parameter is
+     * provided, the callback function will be called when the object is initialized.
+     */
+    init(callback?: () => void): LocationManager
+    /**
+     * `Bot API 8.0+` A method that requests location data. The *callback* function will
+     * be called with *null* as the first argument if access to location was not granted,
+     * or an object of type LocationData as the first argument if access was successful.
+     */
+    getLocation(callback: (data: LocationData | null) => void): LocationManager
+    /**
+     * `Bot API 8.0+` A method that opens the location access settings for bots. Useful
+     * when you need to request location access from users who haven't granted it yet.
+     *
+     * *Note that this method can be called only in response to user interaction with the
+     * Mini App interface (e.g., a click inside the Mini App or on the main button).*
+     */
+    openSettings(): LocationManager
+  }
+
+  /**
+   * This object contains data about the current location.
+   */
+  interface LocationData {
+    /**
+     * Latitude in degrees.
+     */
+    latitude: number
+    /**
+     * Longitude in degrees.
+     */
+    longitude: number
+    /**
+     * Altitude above sea level in meters. *null* if altitude data is not available on
+     * the device.
+     */
+    altitude: number | null
+    /**
+     * The direction the device is moving in degrees (0 = North, 90 = East, 180 = South,
+     * 270 = West). *null* if course data is not available on the device.
+     */
+    course: number | null
+    /**
+     * The speed of the device in m/s. *null* if speed data is not available on the
+     * device.
+     */
+    speed: number | null
+    /**
+     * Accuracy of the latitude and longitude values in meters. *null* if horizontal
+     * accuracy data is not available on the device.
+     */
+    horizontal_accuracy: number | null
+    /**
+     * Accuracy of the altitude value in meters. *null* if vertical accuracy data is not
+     * available on the device.
+     */
+    vertical_accuracy: number | null
+    /**
+     * Accuracy of the course value in degrees. *null* if course accuracy data is not
+     * available on the device.
+     */
+    course_accuracy: number | null
+    /**
+     * Accuracy of the speed value in m/s. *null* if speed accuracy data is not available
+     * on the device.
+     */
+    speed_accuracy: number | null
+  }
+
+  /**
    * This object contains data that is transferred to the Web App when it is opened. It is
    * empty if the Web App was launched from a keyboard button.
    */
@@ -1256,8 +2170,7 @@ export declare namespace TelegramWebApps {
      */
     readonly allows_write_to_pm?: true
     /**
-     * URL of the user’s profile photo. The photo can be in .jpeg or .svg formats. Only
-     * returned for Web Apps launched from the attachment menu.
+     * URL of the user’s profile photo. The photo can be in .jpeg or .svg formats.
      */
     readonly photo_url?: string
   }
@@ -1297,6 +2210,10 @@ export declare namespace TelegramWebApps {
     this: { viewportHeight: number },
     params: { isStateStable: boolean }
   ) => void
+  type SafeAreaChangedEventHandler = (this: { safeAreInset: SafeAreaInset }) => void
+  type ContentSafeAreaChangedEventHandler = (this: {
+    contentSafeAreaInset: ContentSafeAreaInset
+  }) => void
   type InvoiceClosedEventHandler = (params: {
     url: string
     status: 'paid' | 'cancelled' | 'failed' | 'pending'
@@ -1308,6 +2225,51 @@ export declare namespace TelegramWebApps {
     params: { isAuthenticated: true; biometricToken: string } | { isAuthenticated: false }
   ) => void
   type BiometricTokenUpdatedEventHandler = (params: { isUpdated: boolean }) => void
+  type FullscreenChangedEventHandler = (this: { isFullscreen: boolean }) => void
+  type FullscreenFailedEventHandler = (params: {
+    error: 'UNSUPPORTED' | 'ALREADY_FULLSCREEN'
+  }) => void
+  type HomeScreenCheckedEventHandler = (params: {
+    status: 'unsupported' | 'unknown' | 'added' | 'missed'
+  }) => void
+  type AccelerometerChangedEventHandler = (this: {
+    x: number
+    y: number
+    z: number
+  }) => void
+  type AccelerometerFailedEventHandler = (params: { error: 'UNSUPPORTED' }) => void
+  type DeviceOrientationChangedEventHandler = (this: {
+    alpha: number
+    beta: number
+    gamma: number
+  }) => void
+  type DeviceOrientationFailedEventHandler = (params: { error: 'UNSUPPORTED' }) => void
+  type GyroscopeChangedEventHandler = (this: { x: number; y: number; z: number }) => void
+  type GyroscopeFailedEventHandler = (params: { error: 'UNSUPPORTED' }) => void
+  type LocationRequestedEventHandler = (params: { locationData: LocationData }) => void
+  type ShareMessageFailedEventHandler = (params: {
+    error:
+      | 'UNSUPPORTED'
+      | 'MESSAGE_EXPIRED'
+      | 'MESSAGE_SEND_FAILED'
+      | 'USER_DECLINED'
+      | 'UNKNOWN_ERROR'
+  }) => void
+  type EmojiStatusFailedEventHandler = (params: {
+    error:
+      | 'UNSUPPORTED'
+      | 'SUGGESTED_EMOJI_INVALID'
+      | 'DURATION_INVALID'
+      | 'USER_DECLINED'
+      | 'SERVER_ERROR'
+      | 'UNKNOWN_ERROR'
+  }) => void
+  type EmojiStatusAccessRequestedEventHandler = (params: {
+    status: 'allowed' | 'cancelled'
+  }) => void
+  type FileDownloadRequestedEventHandler = (params: {
+    status: 'downloading' | 'cancelled'
+  }) => void
 }
 
 declare global {
