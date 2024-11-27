@@ -973,7 +973,7 @@ export declare namespace TelegramWebApps {
      * via the Mini App method requestEmojiStatusAccess.*
      */
     setEmojiStatus(
-      custom_emoji_id: number,
+      custom_emoji_id: string,
       params?: EmojiStatusParams,
       callback?: (set: boolean) => void
     ): void
