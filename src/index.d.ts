@@ -944,7 +944,10 @@ export declare namespace TelegramWebApps {
      * *callback* parameter was passed, the *callback* function will be called and the
      * invoice status will be passed as the first argument.
      */
-    openInvoice(url: string, callback?: InvoiceClosedEventHandler): void
+    openInvoice(
+      url: string,
+      callback?: (status: 'paid' | 'cancelled' | 'failed' | 'pending') => void
+    ): void
     /**
      * `Bot API 7.8+` A method that opens the native story editor with the media specified
      * in the *media_url* parameter as an HTTPS URL. An optional *params* argument of the
