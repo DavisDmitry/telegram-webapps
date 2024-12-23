@@ -1767,7 +1767,11 @@ export declare namespace TelegramWebApps {
      */
     authenticate(
       params: BiometricAuthenticateParams,
-      callback?: (authenticatedSuccessfully: boolean) => void
+      callback?: (authenticatedSuccessfully: true, token: string) => void
+    ): BiometricManager
+    authenticate(
+      params: BiometricAuthenticateParams,
+      callback?: (authenticatedSuccessfully: false) => void
     ): BiometricManager
     /**
      * `Bot API 7.2+` A method that updates the biometric token in secure storage on the
