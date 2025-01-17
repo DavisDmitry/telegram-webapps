@@ -1340,7 +1340,7 @@ export declare namespace TelegramWebApps {
     /**
      * The suggested name for the downloaded file.
      */
-    name: string
+    file_name: string
   }
 
   /**
