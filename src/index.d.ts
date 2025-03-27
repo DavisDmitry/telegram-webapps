@@ -962,7 +962,7 @@ export declare namespace TelegramWebApps {
      * must belong to a PreparedInlineMessage previously obtained via the Bot API method
      * savePreparedInlineMessage.
      */
-    shareMessage(message_id: number, callback?: (sent: boolean) => void): void
+    shareMessage(message_id: string, callback?: (sent: boolean) => void): void
     /**
      * `Bot API 8.0+` A method that opens a dialog allowing the user to set the specified
      * custom emoji as their status. An optional *params* argument of type
