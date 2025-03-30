@@ -11,10 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          corepack enable
-          corepack install
+      - run: corepack enable
       - uses: actions/setup-node@v4
-      - run: corepack enable yarn
       - run: yarn
       - run: yarn lint
