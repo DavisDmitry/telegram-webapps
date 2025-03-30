@@ -15,6 +15,7 @@ jobs:
         with:
           cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
+      - run: corepack enable
       - run: yarn
       - run: yarn npm publish
         env:
