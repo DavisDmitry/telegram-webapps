@@ -24,6 +24,7 @@
     "type": "git",
     "url": "https://github.com/DavisDmitry/telegram-webapps.git"
   },
+  "packageManager": "yarn@3.6.3",
   "scripts": {
     "lint": "prettier --check src",
     "format": "prettier -w src"

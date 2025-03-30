@@ -11,8 +11,10 @@ jobs:
     environment: npm
     steps:
       - uses: actions/checkout@v4
+      - run: enable corepack
       - uses: actions/setup-node@v4
         with:
+          cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
       - run: yarn
       - run: yarn npm publish
