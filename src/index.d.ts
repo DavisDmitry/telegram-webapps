@@ -2131,6 +2131,11 @@ export declare namespace TelegramWebApps {
      * validity.
      */
     readonly hash: string
+    /**
+     * A signature of all passed parameters (except hash), which the third party can
+     * use to check their validity.
+     */
+    readonly signature: string
   }
 
   /**
