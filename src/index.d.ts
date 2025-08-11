@@ -209,6 +209,14 @@ export declare namespace TelegramWebApps {
      */
     readonly LocationManager: LocationManager
     /**
+     * `Bot API 9.0+` An object for controlling local storage on the device
+     */
+    readonly DeviceStorage: DeviceStorage
+    /**
+     * `Bot API 9.0+` An object for controlling secure storage on the device
+     */
+    readonly SecureStorage: SecureStorage
+    /**
      * Returns true if the user's app supports a version of the Bot API that is equal to
      * or higher than the version passed as the parameter.
      */
@@ -1154,6 +1162,11 @@ export declare namespace TelegramWebApps {
     checkHomeScreenStatus(
       callback?: (status: 'unsupported' | 'unknown' | 'added' | 'missed') => void
     ): void
+    /**
+     * `Bot API 9.1+` A method that hides the on-screen keyboard, if it is currently
+     * visible. Does nothing if the keyboard is not active.
+     */
+    hideKeyboard(): void
   }
 
   /**
@@ -2070,6 +2083,136 @@ export declare namespace TelegramWebApps {
      * on the device.
      */
     speed_accuracy: number | null
+  }
+
+  /**
+   * `Bot API 9.0+` This object controls local storage on the device. Each bot can store
+   * up to 5 MB of data per user in the local storage.
+   */
+  interface DeviceStorage {
+    /**
+     * `Bot API 9.0+` A method that stores a value in the local storage using the
+     * specified key. The key should contain 1-256 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. The value should contain 0-10240 characters. If an
+     * optional *callback* parameter was passed, the *callback* function will be called.
+     * In case of an error, the first argument will contain the error. In case of success,
+     * the first argument will be *null* and the second argument will be a boolean
+     * indicating whether the value was stored.
+     */
+    setItem(
+      key: string,
+      value: string,
+      callback?: ((error: Error) => void) | ((error: null, valueStored: boolean) => void)
+    ): DeviceStorage
+    /**
+     * `Bot API 9.0+` A method that receives a value from the local storage using the
+     * specified key. The key should contain 1-256 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. In case of an error, the *callback* function will be
+     * called and the first argument will contain the error. In case of success, the first
+     * argument will be *null* and the value will be passed as the second argument.
+     */
+    getItem(
+      key: string,
+      callback: ((error: Error) => void) | ((error: null, value: string) => void)
+    ): DeviceStorage
+    /**
+     * `Bot API 9.0+` A method that removes a value from the local storage using the
+     * specified key. The key should contain 1-256 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. If an optional *callback* parameter was passed, the
+     * *callback* function will be called. In case of an error, the first argument will
+     * contain the error. In case of success, the first argument will be *null* and the
+     * second argument will be a boolean indicating whether the value was removed.
+     */
+    removeItem(
+      key: string,
+      callback?: ((error: Error) => void) | ((error: null, valueRemoved: boolean) => void)
+    ): DeviceStorage
+    /**
+     * `Bot API 9.0+` A method that removes all keys stored by the bot in the local
+     * storage. If an optional *callback* parameter was passed, the *callback* function
+     * will be called. In case of an error, the first argument will contain the error.
+     * In case of success, the first argument will be *null* and the second argument will
+     * be a boolean indicating whether the values were cleared.
+     */
+    clear(
+      callback?:
+        | ((error: Error) => void)
+        | ((error: null, valuesCleared: boolean) => void)
+    ): DeviceStorage
+  }
+
+  /**
+   * `Bot API 9.0+` This object controls secure storage on the device. Each bot can store
+   * up to 10 items per user in the secure storage using the device's secure storage
+   * mechanism (iOS Keychain or Android Keystore).
+   */
+  interface SecureStorage {
+    /**
+     * `Bot API 9.0+` A method that stores a value in the secure storage using the
+     * specified key. The key should contain 1-64 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. The value should contain 0-4096 characters. If an optional
+     * *callback* parameter was passed, the *callback* function will be called. In case of
+     * an error, the first argument will contain the error. In case of success, the first
+     * argument will be *null* and the second argument will be a boolean indicating
+     * whether the value was stored.
+     */
+    setItem(
+      key: string,
+      value: string,
+      callback?: ((error: Error) => void) | ((error: null, valueStored: boolean) => void)
+    ): SecureStorage
+    /**
+     * `Bot API 9.0+` A method that receives a value from the secure storage using the
+     * specified key. The key should contain 1-64 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. In case of an error, the *callback* function will be
+     * called and the first argument will contain the error. In case of success, the first
+     * argument will be *null*, the second argument will be the stored value, and the
+     * third argument will be a boolean indicating whether the value can be restored after
+     * reinstalling the app.
+     */
+    getItem(
+      key: string,
+      callback:
+        | ((error: Error) => void)
+        | ((error: null, value: string, canRestore: boolean) => void)
+    ): SecureStorage
+    /**
+     * `Bot API 9.0+` A method that attempts to restore a value from the secure storage
+     * using the specified key after the app has been reinstalled. The key should contain
+     * 1-64 characters, only `A-Z`, `a-z`, `0-9`, `_` and `-` are allowed. If an optional
+     * *callback* parameter was passed, the *callback* function will be called. In case of
+     * an error, the first argument will contain the error. In case of success, the first
+     * argument will be *null* and the restored value will be passed as the second
+     * argument.
+     */
+    restoreItem(
+      key: string,
+      callback?: ((error: Error) => void) | ((error: null, restoredValue: string) => void)
+    ): SecureStorage
+    /**
+     * `Bot API 9.0+` A method that removes a value from the secure storage using the
+     * specified key. The key should contain 1-64 characters, only `A-Z`, `a-z`, `0-9`,
+     * `_` and `-` are allowed. If an optional *callback* parameter was passed, the
+     * *callback* function will be called. In case of an error, the first argument will
+     * contain the error. In case of success, the first argument will be *null* and the
+     * second argument will be a boolean indicating whether the value was removed.
+     */
+    removeItem(
+      key: string,
+      callback?: ((error: Error) => void) | ((error: null, valueRemoved: boolean) => void)
+    ): SecureStorage
+    /**
+     * `Bot API 9.0+` A method that removes all keys stored by the bot in the secure
+     * storage. If an optional *callback* parameter was passed, the *callback* function
+     * will be called. In case of an error, the first argument will contain the error. In
+     * case of success, the first argument will be *null* and the second argument will be
+     * a boolean indicating whether the values were cleared.
+     */
+    clear(
+      callback?:
+        | ((error: Error) => void)
+        | ((error: null, valuesCleared: boolean) => void)
+    ): SecureStorage
   }
 
   /**
