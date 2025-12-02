@@ -1301,7 +1301,7 @@ export declare namespace TelegramWebApps {
      * List of buttons to be displayed in the popup, 1-3 buttons. Set to
      * *[{“type”:“close”}]* by default.
      */
-    buttons: PopupButton[]
+    buttons?: PopupButton[]
   }
 
   /**
