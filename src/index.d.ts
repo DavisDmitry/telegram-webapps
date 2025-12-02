@@ -1314,7 +1314,7 @@ export declare namespace TelegramWebApps {
      * List of buttons to be displayed in the popup, 1-3 buttons. Set to
      * *[{“type”:“close”}]* by default.
      */
-    buttons: PopupButton[]
+    buttons?: PopupButton[]
   }
 
   /**
@@ -2274,6 +2274,11 @@ export declare namespace TelegramWebApps {
      * validity.
      */
     readonly hash: string
+    /**
+     * A signature of all passed parameters (except hash), which the third party can
+     * use to check their validity.
+     */
+    readonly signature: string
   }
 
   /**
