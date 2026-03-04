@@ -1551,7 +1551,7 @@ export declare namespace TelegramWebApps {
     /**
      * A method to set the button parameters. The *params* parameter is an object
      * containing one or several fields that need to be changed:
-     * 
+     *
      * **icon_custom_emoji_id** - `Bot API 9.5+` button icon emoji id;
      *
      * **text** - button text;
