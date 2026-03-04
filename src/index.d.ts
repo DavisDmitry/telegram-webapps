@@ -1455,6 +1455,11 @@ export declare namespace TelegramWebApps {
      */
     readonly type: 'main' | 'secondary'
     /**
+     * `Bot API 9.5+` Unique identifier of the custom emoji shown before the text of the
+     * button.
+     */
+    iconCustomEmojiId: string | false
+    /**
      * Current button text. Set to *Continue* for the main button and *Cancel* for the
      * secondary button by default.
      */
@@ -1546,6 +1551,8 @@ export declare namespace TelegramWebApps {
     /**
      * A method to set the button parameters. The *params* parameter is an object
      * containing one or several fields that need to be changed:
+     * 
+     * **icon_custom_emoji_id** - `Bot API 9.5+` button icon emoji id;
      *
      * **text** - button text;
      *
@@ -1562,6 +1569,7 @@ export declare namespace TelegramWebApps {
      * **is_visible** - show the button.
      */
     setParams(params: {
+      icon_custom_emoji_id?: string
       text?: string
       color?: string
       text_color?: string
