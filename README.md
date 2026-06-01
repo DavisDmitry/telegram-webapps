@@ -40,6 +40,12 @@ via `pnpm` :
 pnpm add -D telegram-webapps
 ```
 
+via `bun` :
+
+```bash
+bun add -d telegram-webapps
+```
+
 ### Use typings
 
 Include the types file inside your [ `tsconfig.json` ](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) file like this:
