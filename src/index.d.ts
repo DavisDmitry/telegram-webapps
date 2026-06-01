@@ -1067,6 +1067,15 @@ export declare namespace TelegramWebApps {
      */
     requestContact(callback?: (phoneNumberShared: boolean) => void): void
     /**
+     * `Bot API 9.6+` A method that opens a dialog allowing the user to select an
+     * existing chat or create a new one. If an optional *callback* parameter is provided,
+     * the *callback* function will be called with a boolean as the first argument,
+     * indicating whether the message was successfully sent.
+     * The request id passed to this method must belong to a PreparedKeyboardButton
+     * previously obtained via the Bot API method savePreparedKeyboardButton.
+     */
+    requestChat(req_id: string, callback?: (messageSent: boolean) => void): void
+    /**
      * A method that informs the Telegram app that the Web App is ready to be displayed.
      *
      * It is recommended to call this method as early as possible, as soon as all
