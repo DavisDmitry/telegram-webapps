@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
+      - run: bun install
       - run: bun publish --access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
