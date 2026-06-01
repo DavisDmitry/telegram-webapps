@@ -11,12 +11,8 @@ jobs:
     environment: npm
     steps:
       - uses: actions/checkout@v4
-      - run: corepack enable
-      - uses: actions/setup-node@v4
-        with:
-          cache: yarn
-      - run: yarn --immutable
-      - run: yarn npm publish --access public
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun publish --access public
         env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_PUBLISH_REGISTRY: 'https://registry.npmjs.org'
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

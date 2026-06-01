@@ -11,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: corepack enable
-      - uses: actions/setup-node@v4
-        with:
-          cache: yarn
-      - run: yarn --immutable
-      - run: yarn lint
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun run lint
